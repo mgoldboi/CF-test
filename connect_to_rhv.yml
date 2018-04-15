@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  connection: local
+  tags: infra
+  vars:
+    url: jenkins-vm-11.lab.eng.tlv2.redhat.com/ovirt-engine/api
+    username: admin@internal
+    password: redhat
+  tasks:
+  - name: Debug
+    debug:
+      msg: "{{ lookup('env',  item) }}"
+    with_items:
+      - OVIRT_PASSWORD
+      - OVIRT_TOKEN
+      - OVIRT_USERNAME
+      - OVIRT_URL
+
+  - name: Obtain SSO token with using username/password credentials
+    ovirt_auth:
+      insecure: True
+
+  - ovirt_vms_facts:
+    auth: "{{ ovirt_auth }}"
+    pattern: name=*
+
+  - debug:
+    var: ovirt_vms
