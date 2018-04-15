@@ -5,7 +5,7 @@
   vars:
     url: jenkins-vm-11.lab.eng.tlv2.redhat.com/ovirt-engine/api
     username: admin@internal
-    password: redhat
+    password: 123465
   tasks:
   - name: Debug
     debug:
