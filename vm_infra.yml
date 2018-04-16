@@ -11,22 +11,19 @@
           #    engine_cafile: /etc/pki/ovirt-engine/ca.pem
 
     db_vm:
-      cluster: production
+      cluster: golden_env_mixed_1
       root_password: 123456
       domain: example.com
-      template: rhel7
       memory: 4GiB
       cores: 2
       state: running
 
     httpd_vm:
-      cluster: production
+      cluster: golden_env_mixed_1
       root_password: 123456
       domain: example.com
-      template: rhel7
       memory: 2GiB
       cores: 2
-      storage_domain: my_storage_domain
       state: running
   
    affinity_groups:
