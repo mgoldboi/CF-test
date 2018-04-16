@@ -4,4 +4,9 @@
   tags: infra
   tasks:
   - ovirt_vms_facts:
+      auth:
+        username: admin@internal
+        password: 123456
+        url: https://jenkins-vm-11.lab.eng.tlv2.redhat.com/ovirt-engine/api
+        insecure: true 
     pattern: name=*
