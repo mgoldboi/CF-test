@@ -3,5 +3,6 @@
   connection: local
   tags: infra
   tasks:
-  - ovirt_vms_facts:
-    pattern: name=*
+  - ovirt_vms:
+     name: myvm
+     state: present
