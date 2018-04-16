@@ -3,6 +3,4 @@
   connection: local
   tags: infra
   tasks:
-  - ovirt_vms:
-     name: myvm
-     state: present
+  - ovirt_auth:
