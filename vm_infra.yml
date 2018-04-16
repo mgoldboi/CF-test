@@ -42,5 +42,25 @@
         tag: db
         profile: "{{ db_vm }}"
 
+  pre_tasks:
+    - name: Login to oVirt
+      ovirt_auth:
+      environment:
+        OVIRT_URL: "{{ url }}"
+        OVIRT_USERNAME: "{{ username }}"
+        OVIRT_PASSWORD: "{{ password }}"
+        insecure: true
+      tags:
+        - always
+
   roles:
     - oVirt.vm-infra
+
+  post_tasks:
+    - name: Logout from oVirt
+      ovirt_auth:
+        state: absent
+        ovirt_auth: "{{ ovirt_auth }}"
+      tags:
+        - always
+
