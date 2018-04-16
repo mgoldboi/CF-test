@@ -4,3 +4,6 @@
   tags: infra
   tasks:
   - ovirt_auth:
+    username: "{{ OVIRT_USERNAME }}"
+    password: "{{ OVIRT_PASSWORD }}"
+    url: "{{ OVIRT_URL }}"
