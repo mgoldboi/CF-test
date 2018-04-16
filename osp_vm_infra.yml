@@ -1,0 +1,104 @@
+---
+- name: oVirt infra
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    undercloud_vm:
+      cluster: Default
+      template: rhel75
+      memory: 16GiB
+      storage_domain: nfs_data
+      cores: 4
+      high_availability: true
+      state: running
+      nics:
+        - name: nic1
+          network: ovirtmgmt
+          profile: ovirtmgmt
+
+    controller_vm:
+      cluster: Default
+      root_password: redhat
+      domain: example.com
+      #      template: rhel75
+      memory: 16GiB
+      cores: 8
+      storage_domain: nfs_data
+      high_availability: true
+      state: running
+  
+    affinity_groups:
+      - name: controllers-negative
+        cluster: Default
+        vm_enforcing: false
+        vm_rule: negative
+        vms:
+          - moran-controller-1
+          - moran-controller-2
+          - moran-controller-3
+
+    vms:
+      - name: moran_undercloud
+        tag: undercloud_vm
+        tag: moran_osp13_deploymet
+        profile: "{{ undercloud_vm }}"
+        cloud_init:
+          root_password: 'redhat'
+          host_name: director.example.com
+          custom_script: |
+            rh_subscription:
+              username: user
+              password: 'password'
+              auto-attach: True
+            package_upgrade: true
+            users:
+              - name: stack
+                sudo: ALL=(ALL) NOPASSWD:ALL
+            chpasswd:
+              list: |
+                root:redhat
+                stack:stack
+            runcmd:
+              - [ 'mkdir', '/home/stack/templates', '/home/stack/images' ]
+              - [ 'chown', 'stack:stack', '/home/stack/templates', '/home/stack/images' ]
+              - [ 'yum', '-y', 'localinstall', 'http://rhos-release.virt.bos.redhat.com/repos/rhos-release/rhos-release-latest.noarch.rpm' ]
+              - [ 'rhos-release', '13' ]
+              - [ 'rhos-release', 'rhel-7.5' ]
+              - [ 'yum', '-y', 'update' ]
+              - [ 'reboot', '0' ]
+      - name: moran-controller-1
+        tag: controller_vm
+        tag: moran_osp13_deploymet
+        profile: "{{ controller_vm }}"
+      - name: moran-controller-2
+        tag: controller_vm
+        tag: moran_osp13_deploymet
+        profile: "{{ controller_vm }}"
+      - name: moran-controller-3
+        tag: controller_vm
+        tag: moran_osp13_deploymet
+        profile: "{{ controller_vm }}"
+
+  pre_tasks:
+    - name: Login to oVirt
+      ovirt_auth:
+      environment:
+        OVIRT_URL: "{{ url }}"
+        OVIRT_USERNAME: "{{ username }}"
+        OVIRT_PASSWORD: "{{ password }}"
+        insecure: true
+      tags:
+        - always
+
+  roles:
+    - oVirt.vm-infra
+
+  post_tasks:
+    - name: Logout from oVirt
+      ovirt_auth:
+        state: absent
+        ovirt_auth: "{{ ovirt_auth }}"
+      tags:
+        - always
