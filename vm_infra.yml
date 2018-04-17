@@ -45,11 +45,15 @@
   pre_tasks:
     - name: Login to oVirt
       ovirt_auth:
-      environment:
-        OVIRT_URL: "{{ url }}"
-        OVIRT_USERNAME: "{{ username }}"
-        OVIRT_PASSWORD: "{{ password }}"
-        insecure: true
+        url: "{{ lookup('env','OVIRT_URL') }}"
+        username: "{{ lookup('env','OVIRT_USERNAME') }}"
+        password: "{{ lookup('env','OVIRT_PASSWORD') }}"
+        ca_file: "{{ lookup('env','OVIRT_CAFILE') }}"
+              #      environment:
+              #        OVIRT_URL: "{{ url }}"
+              #        OVIRT_USERNAME: "{{ username }}"
+              #        OVIRT_PASSWORD: "{{ password }}"
+              #        insecure: true
       tags:
         - always
 
