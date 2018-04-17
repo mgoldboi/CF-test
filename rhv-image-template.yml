@@ -1,0 +1,36 @@
+---
+- name: Create a template from qcow
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    qcow_url: https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
+    template_cluster: production
+    template_name: centos7_template
+    template_memory: 4GiB
+    template_cpu: 2
+    template_disk_size: 10GiB
+    template_disk_storage: mydata
+
+  pre_tasks:
+    - name: Login to oVirt
+      ovirt_auth:
+      environment:
+        OVIRT_URL: "{{ url }}"
+        OVIRT_USERNAME: "{{ username }}"
+        OVIRT_PASSWORD: "{{ password }}"
+        insecure: true
+      tags:
+        - always
+
+  roles:
+    - oVirt.image-template
+
+  post_tasks:
+    - name: Logout from oVirt
+      ovirt_auth:
+        state: absent
+        ovirt_auth: "{{ ovirt_auth }}"
+      tags:
+        - always
