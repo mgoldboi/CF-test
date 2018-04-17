@@ -49,6 +49,7 @@
         username: "{{ lookup('env','OVIRT_USERNAME') }}"
         password: "{{ lookup('env','OVIRT_PASSWORD') }}"
         ca_file: "{{ lookup('env','OVIRT_CAFILE') }}"
+        insecure: true
               #      environment:
               #        OVIRT_URL: "{{ url }}"
               #        OVIRT_USERNAME: "{{ username }}"
