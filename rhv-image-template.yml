@@ -25,7 +25,7 @@
         - always
 
   roles:
-    - oVirt.image-template
+    - ovirt-ansible-image-template 
 
   post_tasks:
     - name: Logout from oVirt
